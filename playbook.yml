@@ -1,24 +1,24 @@
 ---
 - name: Generate service env files from encrypted secrets
-	hosts: localhost
-	connection: local
-	gather_facts: false
+  hosts: localhost
+  connection: local
+  gather_facts: false
 
-	vars_files:
-		- secrets.yml
+  vars_files:
+    - secrets.yml
 
-	tasks:
-		- name: Generate account-service .env
-			include_tasks: account-service/tasks.yml
-			tags:
-				- account-service
+  tasks:
+    - name: Generate account-service .env
+      include_tasks: ../trading-backend/cmd/account-service/formation.yml
+      tags:
+        - account-service
 
-		- name: Generate stock-screener .env
-			include_tasks: stock-screener/tasks.yml
-			tags:
-				- stock-screener
+    - name: Generate stock-screener .env
+      include_tasks: ../trading-backend/cmd/stock-screener/formation.yml
+      tags:
+        - stock-screener
 
-		- name: Generate frontend .env
-			include_tasks: frontend/tasks.yml
-			tags:
-				- frontend
+    - name: Generate frontend .env
+      include_tasks: ../trading-frontend/formation.yml
+      tags:
+        - frontend

@@ -99,11 +99,11 @@ ansible-playbook playbook.yml --ask-vault-pass --tags stock-screener
 ansible-playbook playbook.yml --ask-vault-pass --tags frontend
 ```
 
-Template locations:
+Env content is now defined inline in these Ansible files:
 
-- `trading-backend/cmd/account-service/formation.env.j2`
-- `trading-backend/cmd/stock-screener/formation.env.j2`
-- `trading-frontend/formation.env.j2`
+- `trading-backend/cmd/account-service/formation.yml`
+- `trading-backend/cmd/stock-screener/formation.yml`
+- `trading-frontend/formation.yml`
 
 5. Then start Docker Compose (or use the convenience script):
 

@@ -1,6 +1,0 @@
----
-- name: Render stock-screener .env
-  template:
-    src: ../trading-backend/cmd/stock-screener/formation.env.j2
-    dest: stock-screener/.env
-    mode: '0600'

@@ -1,0 +1,43 @@
+version: '3.9'
+services:
+  frontend:
+    image: trading-formation-frontend:latest
+    build:
+      context: ..
+      dockerfile: ./trading-formation/frontend/Dockerfile
+    env_file:
+      - ./frontend/.env
+    ports:
+      - '3000:3000'
+    depends_on:
+      - account-service
+      - stock-screener
+    restart: unless-stopped
+
+  account-service:
+    image: trading-formation-account-service:latest
+    build:
+      context: ..
+      dockerfile: ./trading-formation/account-service/Dockerfile
+    env_file:
+      - ./account-service/.env
+    ports:
+      - '9000:9000'
+    restart: unless-stopped
+
+  stock-screener:
+    image: trading-formation-stock-screener:latest
+    build:
+      context: ..
+      dockerfile: ./trading-formation/stock-screener/Dockerfile
+    env_file:
+      - ./stock-screener/.env
+    ports:
+      - '8080:8080'
+    restart: unless-stopped
+
+networks:
+  default:
+    driver: bridge
+
+

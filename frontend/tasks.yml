@@ -1,0 +1,6 @@
+---
+- name: Render frontend .env
+  template:
+    src: ../trading-frontend/formation.env.j2
+    dest: frontend/.env
+    mode: '0600'

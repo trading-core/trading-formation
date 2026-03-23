@@ -79,16 +79,31 @@ Orchestrates frontend + backend services for local development with Docker Compo
 
 ```bash
 cd trading-formation
-ansible-vault encrypt ansible/vault.yml
+ansible-vault encrypt secrets.yml
 ```
 
-3. Populate `ansible/vault.yml` (or use existing placeholders in `ansible/vault.yml`).
+3. Populate `secrets.yml` (or use existing placeholders in `secrets.yml`).
 4. Run generation playbook (or use the convenience script which does this automatically):
 
 ```bash
 cd trading-formation
-ansible-playbook ansible/playbook.yml --ask-vault-pass
+ansible-playbook playbook.yml --ask-vault-pass
 ```
+
+To generate env for only one service:
+
+```bash
+cd trading-formation
+ansible-playbook playbook.yml --ask-vault-pass --tags account-service
+ansible-playbook playbook.yml --ask-vault-pass --tags stock-screener
+ansible-playbook playbook.yml --ask-vault-pass --tags frontend
+```
+
+Template locations:
+
+- `trading-backend/cmd/account-service/formation.env.j2`
+- `trading-backend/cmd/stock-screener/formation.env.j2`
+- `trading-frontend/formation.env.j2`
 
 5. Then start Docker Compose (or use the convenience script):
 
@@ -96,7 +111,7 @@ ansible-playbook ansible/playbook.yml --ask-vault-pass
 docker compose up --build
 ```
 
-6. Keep `ansible/vault.yml` encrypted and never commit a plain secrets file.
+6. Keep `secrets.yml` encrypted and never commit a plain secrets file.
 
 ## Alternative per-service run options
 

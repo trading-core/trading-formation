@@ -1,0 +1,6 @@
+---
+- name: Render account-service .env
+  template:
+    src: ../trading-backend/cmd/account-service/formation.env.j2
+    dest: account-service/.env
+    mode: '0600'

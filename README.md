@@ -32,14 +32,21 @@ Orchestrates frontend + backend services for local development with Docker Compo
    ./run-services.sh start
    ```
 
-   To stop:
+   To pause services (containers remain):
 
    ```bash
    run-services.bat stop
    ./run-services.sh stop
    ```
 
-   To restart:
+   To delete all services and containers:
+
+   ```bash
+   run-services.bat delete
+   ./run-services.sh delete
+   ```
+
+   To restart (rebuild and restart):
 
    ```bash
    run-services.bat restart

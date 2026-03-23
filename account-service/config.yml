@@ -1,6 +1,0 @@
-# account-service configuration
-server:
-  host: 0.0.0.0
-  port: 9000
-
-# no external secrets currently required

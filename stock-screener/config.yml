@@ -1,8 +1,0 @@
-# stock-screener configuration
-server:
-  host: 0.0.0.0
-  port: 8080
-alpaca:
-  base_url: ${ALPACA_API_BASE_URL}
-  api_key: ${ALPACA_API_KEY}
-  api_secret: ${ALPACA_API_SECRET}

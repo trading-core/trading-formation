@@ -1,6 +1,0 @@
-# frontend configuration
-app:
-  host: 0.0.0.0
-  port: 3000
-api:
-  base_url: ${NEXT_PUBLIC_API_BASE_URL}

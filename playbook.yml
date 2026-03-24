@@ -18,6 +18,11 @@
       tags:
         - stock-screener
 
+    - name: Generate auth-service .env
+      include_tasks: ../trading-backend/cmd/auth-service/formation.yml
+      tags:
+        - auth-service
+
     - name: Generate frontend .env
       include_tasks: ../trading-frontend/formation.yml
       tags:

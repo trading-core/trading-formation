@@ -12,6 +12,32 @@ services:
     depends_on:
       - account-service
       - stock-screener
+      - auth-service
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: trading_auth
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  auth-service:
+    image: trading-formation-auth-service:latest
+    build:
+      context: ..
+      dockerfile: ./trading-formation/auth-service/Dockerfile
+    env_file:
+      - ./auth-service/.env
+    ports:
+      - '9100:9100'
+    depends_on:
+      - postgres
     restart: unless-stopped
 
   account-service:
@@ -39,5 +65,8 @@ services:
 networks:
   default:
     driver: bridge
+
+volumes:
+  postgres-data:
 
 

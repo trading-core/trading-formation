@@ -7,7 +7,7 @@ case "$1" in
         docker compose up --build -d
         ;;
     stop)
-        echo "Pausing services..."
+        echo "Stopping services..."
         docker compose stop
         ;;
     delete)
@@ -19,12 +19,17 @@ case "$1" in
         docker compose down
         docker compose up --build -d
         ;;
+    config)
+        echo "Generating service configuration files..."
+        sudo ansible-playbook playbook.yml --ask-vault-pass
+        ;;
     *)
-        echo "Usage: $0 {start|stop|delete|restart}"
+        echo "Usage: $0 {start|stop|delete|restart|config}"
         echo "  start   - Build and start services in detached mode"
-        echo "  stop    - Pause services (containers remain)"
+        echo "  stop    - Stop services (containers remain)"
         echo "  delete  - Stop and remove all services"
         echo "  restart - Stop, rebuild, and restart services"
+        echo "  config  - Generate service configuration files from encrypted secrets"
         exit 1
         ;;
 esac

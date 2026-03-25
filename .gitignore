@@ -7,7 +7,7 @@
 **/dist
 **/build
 backend/account-service/.env
-backend/auth-service/.env
+backend/authentication-service/.env
 backend/stock-screener/.env
 frontend/.env
 

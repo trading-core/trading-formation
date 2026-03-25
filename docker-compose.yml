@@ -12,7 +12,7 @@ services:
     depends_on:
       - account-service
       - stock-screener
-      - auth-service
+      - authentication-service
     restart: unless-stopped
 
   postgres:
@@ -27,13 +27,13 @@ services:
       - postgres-data:/var/lib/postgresql/data
     restart: unless-stopped
 
-  auth-service:
-    image: trading-formation-auth-service:latest
+  authentication-service:
+    image: trading-formation-authentication-service:latest
     build:
       context: ..
-      dockerfile: ./trading-formation/backend/auth-service/Dockerfile
+      dockerfile: ./trading-formation/backend/authentication-service/Dockerfile
     env_file:
-      - ./backend/auth-service/.env
+      - ./backend/authentication-service/.env
     ports:
       - '9100:9100'
     depends_on:

@@ -9,12 +9,12 @@ Orchestrates frontend + backend services for local development with Docker Compo
    ```bash
    cp backend/account-service/.env.example backend/account-service/.env
    cp backend/stock-screener/.env.example backend/stock-screener/.env
-   cp backend/auth-service/.env.example backend/auth-service/.env
+   cp backend/authentication-service/.env.example backend/authentication-service/.env
    cp frontend/.env.example frontend/.env
    # or on Windows
    copy backend\account-service\.env.example backend\account-service\.env
    copy backend\stock-screener\.env.example backend\stock-screener\.env
-   copy backend\auth-service\.env.example backend\auth-service\.env
+   copy backend\authentication-service\.env.example backend\authentication-service\.env
    copy frontend\.env.example frontend\.env
    ```
 
@@ -67,7 +67,7 @@ Orchestrates frontend + backend services for local development with Docker Compo
 - `frontend`: builds `trading-formation/frontend` (Next.js)
 - `account-service`: builds `trading-formation/backend/account-service`
 - `stock-screener`: builds `trading-formation/backend/stock-screener`
-- `auth-service`: builds `trading-formation/backend/auth-service`
+- `authentication-service`: builds `trading-formation/backend/authentication-service`
 
 ## Secrets management
 

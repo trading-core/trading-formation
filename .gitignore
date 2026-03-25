@@ -6,7 +6,8 @@
 **/.next
 **/dist
 **/build
-account-service/.env
-stock-screener/.env
+backend/account-service/.env
+backend/auth-service/.env
+backend/stock-screener/.env
 frontend/.env
 

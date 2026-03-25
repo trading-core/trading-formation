@@ -31,9 +31,9 @@ services:
     image: trading-formation-auth-service:latest
     build:
       context: ..
-      dockerfile: ./trading-formation/auth-service/Dockerfile
+      dockerfile: ./trading-formation/backend/auth-service/Dockerfile
     env_file:
-      - ./auth-service/.env
+      - ./backend/auth-service/.env
     ports:
       - '9100:9100'
     depends_on:
@@ -44,9 +44,9 @@ services:
     image: trading-formation-account-service:latest
     build:
       context: ..
-      dockerfile: ./trading-formation/account-service/Dockerfile
+      dockerfile: ./trading-formation/backend/account-service/Dockerfile
     env_file:
-      - ./account-service/.env
+      - ./backend/account-service/.env
     ports:
       - '9000:9000'
     restart: unless-stopped
@@ -55,9 +55,9 @@ services:
     image: trading-formation-stock-screener:latest
     build:
       context: ..
-      dockerfile: ./trading-formation/stock-screener/Dockerfile
+      dockerfile: ./trading-formation/backend/stock-screener/Dockerfile
     env_file:
-      - ./stock-screener/.env
+      - ./backend/stock-screener/.env
     ports:
       - '8080:8080'
     restart: unless-stopped

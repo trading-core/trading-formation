@@ -7,12 +7,14 @@ Orchestrates frontend + backend services for local development with Docker Compo
 1. Copy per-service env examples and fill in real secrets (do not commit `.env`):
 
    ```bash
-   cp account-service/.env.example account-service/.env
-   cp stock-screener/.env.example stock-screener/.env
+   cp backend/account-service/.env.example backend/account-service/.env
+   cp backend/stock-screener/.env.example backend/stock-screener/.env
+   cp backend/auth-service/.env.example backend/auth-service/.env
    cp frontend/.env.example frontend/.env
    # or on Windows
-   copy account-service\.env.example account-service\.env
-   copy stock-screener\.env.example stock-screener\.env
+   copy backend\account-service\.env.example backend\account-service\.env
+   copy backend\stock-screener\.env.example backend\stock-screener\.env
+   copy backend\auth-service\.env.example backend\auth-service\.env
    copy frontend\.env.example frontend\.env
    ```
 
@@ -63,8 +65,9 @@ Orchestrates frontend + backend services for local development with Docker Compo
 ## Services
 
 - `frontend`: builds `trading-formation/frontend` (Next.js)
-- `account-service`: builds `trading-formation/account-service`
-- `stock-screener`: builds `trading-formation/stock-screener`
+- `account-service`: builds `trading-formation/backend/account-service`
+- `stock-screener`: builds `trading-formation/backend/stock-screener`
+- `auth-service`: builds `trading-formation/backend/auth-service`
 
 ## Secrets management
 

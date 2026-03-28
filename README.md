@@ -59,6 +59,7 @@ Orchestrates frontend + backend services for local development with Docker Compo
    - Frontend: http://localhost:3000
    - Account Service: http://localhost:9000
    - Stock Screener: http://localhost:8080
+   - Redis: localhost:6379
 
 ---
 
@@ -68,6 +69,7 @@ Orchestrates frontend + backend services for local development with Docker Compo
 - `account-service`: builds `trading-formation/backend/account-service`
 - `stock-screener`: builds `trading-formation/backend/stock-screener`
 - `authentication-service`: builds `trading-formation/backend/authentication-service`
+- `redis`: event log backend used by `account-service`
 
 ## Secrets management
 

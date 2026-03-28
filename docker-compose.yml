@@ -1,4 +1,17 @@
 services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - '6379:6379'
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+
   frontend:
     image: trading-formation-frontend:latest
     build:
@@ -55,6 +68,9 @@ services:
       - ./backend/account-service/.env
     ports:
       - '9000:9000'
+    depends_on:
+      redis:
+        condition: service_healthy
     restart: unless-stopped
 
   stock-screener:
@@ -74,5 +90,6 @@ networks:
 
 volumes:
   postgres-data:
+  redis-data:
 
 

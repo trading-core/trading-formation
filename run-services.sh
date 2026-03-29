@@ -6,30 +6,28 @@ case "$1" in
         echo "Starting services with build..."
         docker compose up --build -d
         ;;
-    stop)
-        echo "Stopping services..."
-        docker compose stop
+    kill)
+        echo "Stopping and removing containers..."
+        docker compose down
         ;;
     delete)
-        echo "Deleting services..."
+        echo "Purging Docker containers, images, and volumes..."
         docker compose down
-        ;;
-    restart)
-        echo "Restarting services..."
-        docker compose down
-        docker compose up --build -d
+        docker container prune -f
+        docker image prune -f
+        docker volume prune -f
+        echo "Docker purge completed"
         ;;
     config)
         echo "Generating service configuration files..."
         sudo ansible-playbook playbook.yml --ask-vault-pass
         ;;
     *)
-        echo "Usage: $0 {start|stop|delete|restart|config}"
-        echo "  start   - Build and start services in detached mode"
-        echo "  stop    - Stop services (containers remain)"
-        echo "  delete  - Stop and remove all services"
-        echo "  restart - Stop, rebuild, and restart services"
-        echo "  config  - Generate service configuration files from encrypted secrets"
+        echo "Usage: $0 {start|kill|delete|config}"
+        echo "  start  - Build and start services in detached mode"
+        echo "  kill   - Stop and remove containers"
+        echo "  delete - Purge containers, images, and volumes"
+        echo "  config - Generate service configuration files from encrypted secrets"
         exit 1
         ;;
 esac

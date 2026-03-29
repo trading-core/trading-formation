@@ -25,6 +25,7 @@ services:
       - account-service
       - stock-screener
       - authentication-service
+      #- bot-service
     restart: unless-stopped
 
   postgres:
@@ -83,6 +84,19 @@ services:
     ports:
       - '8080:8080'
     restart: unless-stopped
+
+  # bot-service:
+  #   image: trading-formation-bot-service:latest
+  #   build:
+  #     context: ..
+  #     dockerfile: ./trading-formation/backend/bot-service/Dockerfile
+  #   env_file:
+  #     - ./backend/bot-service/.env
+  #   ports:
+  #     - '8081:8080'
+  #   depends_on:
+  #     - account-service
+  #   restart: unless-stopped
 
 networks:
   default:

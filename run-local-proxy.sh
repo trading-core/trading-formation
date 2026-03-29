@@ -18,7 +18,7 @@ PROXY_IMAGE="${PROXY_IMAGE:-alpine/socat}"
 usage() {
     echo "Usage: $0 {start|stop|status} <service-name> [local-port] [service-port]"
     echo "  start  - Start compose, replace service with local proxy"
-    echo "           local-port: port your local service listens on"
+    echo "           local-port: port your local service listens on (default: from docker-compose.yml)"
     echo "           service-port: port expected by other containers (defaults to local-port)"
     echo "  stop   - Remove proxy and restore the dockerized service"
     echo "  status - Show whether proxy container is running"
@@ -41,10 +41,33 @@ ensure_network() {
     fi
 }
 
+lookup_service_port() {
+    local service="$1"
+    awk -v svc="$service" '
+        $0 ~ "^  " svc ":" { found=1; next }
+        found && /^  [^ ]/ { found=0 }
+        found && /- .*[0-9]+:[0-9]+/ {
+            split($NF, a, ":")
+            gsub(/[^0-9]/, "", a[2])
+            print a[2]
+            exit
+        }
+    ' docker-compose.yml
+}
+
 start_proxy() {
     local service="$1"
-    local local_port="$2"
-    local service_port="${3:-$2}"
+    local local_port="${2:-}"
+    local service_port="${3:-}"
+
+    if [ -z "$local_port" ]; then
+        local_port="$(lookup_service_port "$service")"
+        if [ -z "$local_port" ]; then
+            echo "Error: could not determine port for '$service' from docker-compose.yml. Specify it explicitly."
+            exit 1
+        fi
+    fi
+    service_port="${service_port:-$local_port}"
     local proxy_name
     proxy_name="$(proxy_container_name "$service")"
 
@@ -114,7 +137,7 @@ SERVICE_PORT="${4:-}"
 
 case "$ACTION" in
     start)
-        if [ -z "$SERVICE" ] || [ -z "$LOCAL_PORT" ]; then
+        if [ -z "$SERVICE" ]; then
             usage
         fi
         start_proxy "$SERVICE" "$LOCAL_PORT" "$SERVICE_PORT"

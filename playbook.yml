@@ -23,10 +23,10 @@
       tags:
         - authentication-service
 
-    # - name: Generate bot-service .env
-    #   include_tasks: ../trading-backend/cmd/bot-service/formation.yml
-    #   tags:
-    #     - bot-service
+    - name: Generate bot-service .env
+      include_tasks: ../trading-backend/cmd/bot-service/formation.yml
+      tags:
+        - bot-service
 
     - name: Generate frontend .env
       include_tasks: ../trading-frontend/formation.yml

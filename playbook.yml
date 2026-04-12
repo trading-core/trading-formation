@@ -28,6 +28,11 @@
       tags:
         - bot-service
 
+    - name: Generate reporting-service .env
+      include_tasks: ../trading-backend/cmd/reporting-service/formation.yml
+      tags:
+        - reporting-service
+
     - name: Generate frontend .env
       include_tasks: ../trading-frontend/formation.yml
       tags:

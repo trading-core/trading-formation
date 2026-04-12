@@ -33,6 +33,11 @@
       tags:
         - reporting-service
 
+    - name: Generate storage-service .env
+      include_tasks: ../trading-backend/cmd/storage-service/formation.yml
+      tags:
+        - storage-service
+
     - name: Generate frontend .env
       include_tasks: ../trading-frontend/formation.yml
       tags:

@@ -111,6 +111,24 @@ services:
     depends_on:
       redis:
         condition: service_healthy
+      storage-service:
+        condition: service_started
+    restart: unless-stopped
+
+  storage-service:
+    image: trading-formation-storage-service:latest
+    build:
+      context: ..
+      dockerfile: ./trading-formation/backend/storage-service/Dockerfile
+    env_file:
+      - ./backend/storage-service/.env
+    ports:
+      - '8083:8083'
+    depends_on:
+      redis:
+        condition: service_healthy
+    volumes:
+      - storage-data:/app/storage
     restart: unless-stopped
 
 networks:
@@ -120,5 +138,6 @@ networks:
 volumes:
   postgres-data:
   redis-data:
+  storage-data:
 
 

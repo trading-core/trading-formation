@@ -38,6 +38,11 @@
       tags:
         - storage-service
 
+    - name: Generate journal-service .env
+      include_tasks: ../trading-backend/cmd/journal-service/formation.yml
+      tags:
+        - journal-service
+
     - name: Generate frontend .env
       include_tasks: ../trading-frontend/formation.yml
       tags:

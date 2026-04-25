@@ -58,7 +58,10 @@ services:
     image: trading-formation-authentication-service:latest
     build:
       context: ..
-      dockerfile: ./trading-formation/backend/authentication-service/Dockerfile
+      dockerfile: ./trading-formation/backend/Dockerfile
+      args:
+        SERVICE: authentication-service
+        PORT: 9100
     env_file:
       - ./backend/authentication-service/.env
     ports:
@@ -74,7 +77,10 @@ services:
     image: trading-formation-account-service:latest
     build:
       context: ..
-      dockerfile: ./trading-formation/backend/account-service/Dockerfile
+      dockerfile: ./trading-formation/backend/Dockerfile
+      args:
+        SERVICE: account-service
+        PORT: 9000
     env_file:
       - ./backend/account-service/.env
     ports:
@@ -90,7 +96,10 @@ services:
     image: trading-formation-stock-screener:latest
     build:
       context: ..
-      dockerfile: ./trading-formation/backend/stock-screener/Dockerfile
+      dockerfile: ./trading-formation/backend/Dockerfile
+      args:
+        SERVICE: stock-screener
+        PORT: 8080
     env_file:
       - ./backend/stock-screener/.env
     ports:
@@ -103,7 +112,10 @@ services:
     image: trading-formation-bot-service:latest
     build:
       context: ..
-      dockerfile: ./trading-formation/backend/bot-service/Dockerfile
+      dockerfile: ./trading-formation/backend/Dockerfile
+      args:
+        SERVICE: bot-service
+        PORT: 8080
     env_file:
       - ./backend/bot-service/.env
     ports:
@@ -118,7 +130,10 @@ services:
     image: trading-formation-reporting-service:latest
     build:
       context: ..
-      dockerfile: ./trading-formation/backend/reporting-service/Dockerfile
+      dockerfile: ./trading-formation/backend/Dockerfile
+      args:
+        SERVICE: reporting-service
+        PORT: 8082
     env_file:
       - ./backend/reporting-service/.env
     ports:
@@ -136,7 +151,10 @@ services:
     image: trading-formation-storage-service:latest
     build:
       context: ..
-      dockerfile: ./trading-formation/backend/storage-service/Dockerfile
+      dockerfile: ./trading-formation/backend/Dockerfile
+      args:
+        SERVICE: storage-service
+        PORT: 8083
     env_file:
       - ./backend/storage-service/.env
     ports:
@@ -154,7 +172,10 @@ services:
     image: trading-formation-journal-service:latest
     build:
       context: ..
-      dockerfile: ./trading-formation/backend/journal-service/Dockerfile
+      dockerfile: ./trading-formation/backend/Dockerfile
+      args:
+        SERVICE: journal-service
+        PORT: 8084
     env_file:
       - ./backend/journal-service/.env
     ports:

@@ -1,5 +1,8 @@
 ---
 services:
+  # The YAML key (underscored) maps to a docker-compose service name and a
+  # trading-backend/cmd/<dir> by replacing _ with -. Both must match a real
+  # directory or `docker build` will fail.
   account_service:
     scheme: http
     container: { host: account-service, port: 9000 }

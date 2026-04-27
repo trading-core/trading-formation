@@ -152,7 +152,10 @@ same container port can't run at once.
 ## Adding a service
 
 1. Add an entry to `services.yml` with `container` + `local` host/port and a `compose`
-   block (published_port, memory, depends_on, volumes).
+   block. **The YAML key (underscored) must convert to the cmd directory name with
+   `_ → -`** — e.g. `account_service` ↔ `trading-backend/cmd/account-service/`. The
+   shared backend Dockerfile builds `./cmd/${SERVICE}`, so a mismatch here surfaces
+   as a build failure, not a render failure.
 2. If it needs a new resource kind (e.g. a new event log group), extend `resources.yml`
    or `library.yml`.
 3. Add `cmd/<service>/formation.yml` declaring its `resources`.

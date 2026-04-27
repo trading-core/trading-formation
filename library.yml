@@ -26,22 +26,22 @@ clients:
   account_service:
     ACCOUNT_SERVICE_CLIENT_IMPLEMENTATION: HTTP
     ACCOUNT_SERVICE_SCHEME: "{{ services.account_service.scheme }}"
-    ACCOUNT_SERVICE_HOST: "{{ services.account_service.backend_host }}"
-    ACCOUNT_SERVICE_PORT: "{{ services.account_service.backend_port }}"
+    ACCOUNT_SERVICE_HOST: "{{ services.account_service[mode].host }}"
+    ACCOUNT_SERVICE_PORT: "{{ services.account_service[mode].port }}"
   storage_service:
     STORAGE_SERVICE_CLIENT_IMPLEMENTATION: HTTP
     STORAGE_SERVICE_SCHEME: "{{ services.storage_service.scheme }}"
-    STORAGE_SERVICE_HOST: "{{ services.storage_service.backend_host }}"
-    STORAGE_SERVICE_PORT: "{{ services.storage_service.backend_port }}"
+    STORAGE_SERVICE_HOST: "{{ services.storage_service[mode].host }}"
+    STORAGE_SERVICE_PORT: "{{ services.storage_service[mode].port }}"
 
 public_clients:
   account_service:
-    NEXT_PUBLIC_ACCOUNT_SERVICE_BASE_URL: "{{ services.account_service.public_url }}"
+    NEXT_PUBLIC_ACCOUNT_SERVICE_BASE_URL: "{{ services.account_service.scheme }}://{{ services.account_service.local.host }}:{{ services.account_service.local.port }}"
   stock_screener:
-    NEXT_PUBLIC_STOCK_SCREENER_BASE_URL: "{{ services.stock_screener.public_url }}"
+    NEXT_PUBLIC_STOCK_SCREENER_BASE_URL: "{{ services.stock_screener.scheme }}://{{ services.stock_screener.local.host }}:{{ services.stock_screener.local.port }}"
   auth_service:
-    NEXT_PUBLIC_AUTH_SERVICE_BASE_URL: "{{ services.auth_service.public_url }}"
+    NEXT_PUBLIC_AUTH_SERVICE_BASE_URL: "{{ services.auth_service.scheme }}://{{ services.auth_service.local.host }}:{{ services.auth_service.local.port }}"
   bot_service:
-    NEXT_PUBLIC_BOT_SERVICE_BASE_URL: "{{ services.bot_service.public_url }}"
+    NEXT_PUBLIC_BOT_SERVICE_BASE_URL: "{{ services.bot_service.scheme }}://{{ services.bot_service.local.host }}:{{ services.bot_service.local.port }}"
   journal_service:
-    NEXT_PUBLIC_JOURNAL_SERVICE_BASE_URL: "{{ services.journal_service.public_url }}"
+    NEXT_PUBLIC_JOURNAL_SERVICE_BASE_URL: "{{ services.journal_service.scheme }}://{{ services.journal_service.local.host }}:{{ services.journal_service.local.port }}"

@@ -11,3 +11,4 @@ backend/authentication-service/.env
 backend/stock-screener/.env
 frontend/.env
 secrets.yml
+proxy.conf

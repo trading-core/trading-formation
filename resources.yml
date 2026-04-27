@@ -1,30 +1,35 @@
 ---
 redis:
-  address: redis:6379
+  container: { address: redis:6379 }
+  local:     { address: localhost:6379 }
+
+postgres:
+  container: { dsn: "postgresql://postgres:postgres@postgres:5432/trading_auth?sslmode=disable" }
+  local:     { dsn: "postgresql://postgres:postgres@localhost:5432/trading_auth?sslmode=disable" }
 
 logs:
   account_event_log:
     ACCOUNT_EVENT_LOG_FACTORY: REDIS
-    ACCOUNT_EVENT_LOG_REDIS_ADDRESS: "{{ redis.address }}"
+    ACCOUNT_EVENT_LOG_REDIS_ADDRESS: "{{ redis[mode].address }}"
   bot_event_log:
     TRADING_BOT_EVENT_LOG_FACTORY: REDIS
-    TRADING_BOT_EVENT_LOG_REDIS_ADDRESS: "{{ redis.address }}"
+    TRADING_BOT_EVENT_LOG_REDIS_ADDRESS: "{{ redis[mode].address }}"
   storage_event_log:
     STORAGE_EVENT_LOG_FACTORY: REDIS
-    STORAGE_EVENT_LOG_REDIS_ADDRESS: "{{ redis.address }}"
+    STORAGE_EVENT_LOG_REDIS_ADDRESS: "{{ redis[mode].address }}"
   reporting_event_log:
     TRADING_REPORT_EVENT_LOG_FACTORY: REDIS
-    TRADING_REPORT_EVENT_LOG_REDIS_ADDRESS: "{{ redis.address }}"
+    TRADING_REPORT_EVENT_LOG_REDIS_ADDRESS: "{{ redis[mode].address }}"
   journal_event_log:
     TRADING_JOURNAL_EVENT_LOG_FACTORY: REDIS
-    TRADING_JOURNAL_EVENT_LOG_REDIS_ADDRESS: "{{ redis.address }}"
+    TRADING_JOURNAL_EVENT_LOG_REDIS_ADDRESS: "{{ redis[mode].address }}"
 
 stores:
   user_postgres:
     USER_STORE_IMPLEMENTATION: POSTGRES
-    USER_STORE_POSTGRES_DATASOURCE_NAME: postgresql://postgres:postgres@postgres:5432/trading_auth?sslmode=disable
+    USER_STORE_POSTGRES_DATASOURCE_NAME: "{{ postgres[mode].dsn }}"
 
 storage:
   filesystem:
     STORAGE_BACKEND: FILESYSTEM
-    STORAGE_FILESYSTEM_DIRECTORY: /app/storage
+    STORAGE_FILESYSTEM_DIRECTORY: "{{ '/app/storage' if mode == 'container' else '/tmp/trading-storage' }}"

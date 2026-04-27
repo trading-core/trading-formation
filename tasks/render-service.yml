@@ -1,0 +1,36 @@
+---
+- name: "[{{ service_name }}] Reset env (container mode)"
+  set_fact:
+    service_environment: {}
+
+- name: "[{{ service_name }}] Merge container resources"
+  set_fact:
+    service_environment: "{{ service_environment | combine(lookup('vars', item.0.key)[item.1]) }}"
+  loop: "{{ resources | dict2items | subelements('value') }}"
+  loop_control:
+    label: "{{ item.0.key }}.{{ item.1 }}"
+  vars:
+    mode: container
+
+- name: "[{{ service_name }}] Render container .env"
+  template:
+    src: "{{ playbook_dir }}/templates/service.env.j2"
+    dest: "{{ env_dest }}"
+    mode: '0600'
+
+- name: "[{{ service_name }}] Reset env (local mode)"
+  set_fact:
+    service_environment: {}
+
+- name: "[{{ service_name }}] Merge local resources"
+  set_fact:
+    service_environment: "{{ service_environment | combine(lookup('vars', item.0.key)[item.1]) }}"
+  loop: "{{ resources | dict2items | subelements('value') }}"
+  loop_control:
+    label: "{{ item.0.key }}.{{ item.1 }}"
+  vars:
+    mode: local
+
+- name: "[{{ service_name }}] Collect Makefile target"
+  set_fact:
+    makefile_targets: "{{ makefile_targets | default([]) + [{'name': service_name, 'cmd_dir': cmd_dir, 'env': service_environment}] }}"

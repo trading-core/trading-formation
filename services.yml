@@ -2,36 +2,29 @@
 services:
   account_service:
     scheme: http
-    backend_host: account-service
-    backend_port: 9000
-    public_url: http://localhost:9000
+    container: { host: account-service, port: 9000 }
+    local:     { host: localhost,        port: 9000 }
   stock_screener:
     scheme: http
-    backend_host: stock-screener
-    backend_port: 8080
-    public_url: http://localhost:8080
+    container: { host: stock-screener, port: 8080 }
+    local:     { host: localhost,       port: 8080 }
   auth_service:
     scheme: http
-    backend_host: authentication-service
-    backend_port: 9100
-    public_url: http://localhost:9100
+    container: { host: authentication-service, port: 9100 }
+    local:     { host: localhost,                port: 9100 }
   bot_service:
     scheme: http
-    backend_host: bot-service
-    backend_port: 8080
-    public_url: http://localhost:8081
+    container: { host: bot-service, port: 8080 }
+    local:     { host: localhost,    port: 8081 }
   reporting_service:
     scheme: http
-    backend_host: reporting-service
-    backend_port: 8082
-    public_url: http://localhost:8082
+    container: { host: reporting-service, port: 8082 }
+    local:     { host: localhost,          port: 8082 }
   storage_service:
     scheme: http
-    backend_host: storage-service
-    backend_port: 8083
-    public_url: http://localhost:8083
+    container: { host: storage-service, port: 8083 }
+    local:     { host: localhost,        port: 8083 }
   journal_service:
     scheme: http
-    backend_host: journal-service
-    backend_port: 8084
-    public_url: http://localhost:8084
+    container: { host: journal-service, port: 8084 }
+    local:     { host: localhost,        port: 8084 }

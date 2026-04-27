@@ -10,6 +10,9 @@
     - resources.yml
     - library.yml
 
+  vars:
+    makefile_targets: []
+
   tasks:
     - name: Generate account-service .env
       include_tasks: ../trading-backend/cmd/account-service/formation.yml
@@ -50,3 +53,11 @@
       include_tasks: ../trading-frontend/formation.yml
       tags:
         - frontend
+
+    - name: Render proxy Makefile
+      template:
+        src: templates/Makefile.j2
+        dest: ../trading-backend/Makefile
+        mode: '0644'
+      tags:
+        - makefile

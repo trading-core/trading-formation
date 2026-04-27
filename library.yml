@@ -1,0 +1,47 @@
+---
+secrets:
+  token:
+    TOKEN_SECRET: "{{ token_secret }}"
+  broker_credentials:
+    BROKER_CREDENTIALS_B64_JSON: "{{ broker_credentials_b64_json }}"
+  alpaca:
+    ALPACA_API_KEY: "{{ alpaca_api_key }}"
+    ALPACA_API_SECRET: "{{ alpaca_api_secret }}"
+
+apis:
+  alpaca:
+    ALPACA_API_SCHEME: https
+    ALPACA_API_HOST: data.alpaca.markets
+    ALPACA_API_PORT: "443"
+  cnn_market_sentiment:
+    FETCH_SENTIMENT_STRATEGY_IMPLEMENTATION: CNN_MARKET
+    FETCH_SENTIMENT_STRATEGY_CNN_MARKET_ENDPOINT: https://production.dataviz.cnn.io/index/fearandgreed/graphdata
+  trading_api:
+    TRADING_API_SCHEME: http
+    TRADING_API_HOST: localhost:9000
+  frontend:
+    FRONTEND_BASE_URL: http://localhost:3000
+
+clients:
+  account_service:
+    ACCOUNT_SERVICE_CLIENT_IMPLEMENTATION: HTTP
+    ACCOUNT_SERVICE_SCHEME: "{{ services.account_service.scheme }}"
+    ACCOUNT_SERVICE_HOST: "{{ services.account_service.backend_host }}"
+    ACCOUNT_SERVICE_PORT: "{{ services.account_service.backend_port }}"
+  storage_service:
+    STORAGE_SERVICE_CLIENT_IMPLEMENTATION: HTTP
+    STORAGE_SERVICE_SCHEME: "{{ services.storage_service.scheme }}"
+    STORAGE_SERVICE_HOST: "{{ services.storage_service.backend_host }}"
+    STORAGE_SERVICE_PORT: "{{ services.storage_service.backend_port }}"
+
+public_clients:
+  account_service:
+    NEXT_PUBLIC_ACCOUNT_SERVICE_BASE_URL: "{{ services.account_service.public_url }}"
+  stock_screener:
+    NEXT_PUBLIC_STOCK_SCREENER_BASE_URL: "{{ services.stock_screener.public_url }}"
+  auth_service:
+    NEXT_PUBLIC_AUTH_SERVICE_BASE_URL: "{{ services.auth_service.public_url }}"
+  bot_service:
+    NEXT_PUBLIC_BOT_SERVICE_BASE_URL: "{{ services.bot_service.public_url }}"
+  journal_service:
+    NEXT_PUBLIC_JOURNAL_SERVICE_BASE_URL: "{{ services.journal_service.public_url }}"

@@ -1,0 +1,30 @@
+---
+redis:
+  address: redis:6379
+
+logs:
+  account_event_log:
+    ACCOUNT_EVENT_LOG_FACTORY: REDIS
+    ACCOUNT_EVENT_LOG_REDIS_ADDRESS: "{{ redis.address }}"
+  bot_event_log:
+    TRADING_BOT_EVENT_LOG_FACTORY: REDIS
+    TRADING_BOT_EVENT_LOG_REDIS_ADDRESS: "{{ redis.address }}"
+  storage_event_log:
+    STORAGE_EVENT_LOG_FACTORY: REDIS
+    STORAGE_EVENT_LOG_REDIS_ADDRESS: "{{ redis.address }}"
+  reporting_event_log:
+    TRADING_REPORT_EVENT_LOG_FACTORY: REDIS
+    TRADING_REPORT_EVENT_LOG_REDIS_ADDRESS: "{{ redis.address }}"
+  journal_event_log:
+    TRADING_JOURNAL_EVENT_LOG_FACTORY: REDIS
+    TRADING_JOURNAL_EVENT_LOG_REDIS_ADDRESS: "{{ redis.address }}"
+
+stores:
+  user_postgres:
+    USER_STORE_IMPLEMENTATION: POSTGRES
+    USER_STORE_POSTGRES_DATASOURCE_NAME: postgresql://postgres:postgres@postgres:5432/trading_auth?sslmode=disable
+
+storage:
+  filesystem:
+    STORAGE_BACKEND: FILESYSTEM
+    STORAGE_FILESYSTEM_DIRECTORY: /app/storage

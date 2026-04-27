@@ -6,6 +6,9 @@
 
   vars_files:
     - secrets.yml
+    - services.yml
+    - resources.yml
+    - library.yml
 
   tasks:
     - name: Generate account-service .env

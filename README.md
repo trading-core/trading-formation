@@ -18,10 +18,11 @@ trading-formation/
     render-service.yml renders container .env + collects local env into Makefile
     render-env.yml     single-mode render (used by frontend)
   templates/
-    service.env.j2     KEY=VALUE per line
-    Makefile.j2        per-service `run-<svc>` targets with env inlined
-  docker-compose.yml
+    service.env.j2          KEY=VALUE per line
+    Makefile.j2             per-service `run-<svc>` targets with env inlined
+    docker-compose.yml.j2   compose definition derived from services.yml + resources.yml
   run-services.sh      compose + proxy orchestrator
+  docker-compose.yml   generated, gitignored
 ```
 
 Each backend service declares only what it consumes:
@@ -61,7 +62,8 @@ Each named resource maps to a dict of env-var key/value pairs.
    ```
 
    This runs the playbook and produces:
-   - `backend/<service>/.env` for each backend service (used by docker-compose)
+   - `docker-compose.yml` (the compose stack — gitignored)
+   - `backend/<service>/.env` for each backend service
    - `frontend/.env`
    - `../trading-backend/Makefile` with `run-<service>` targets (host mode, gitignored)
 
@@ -149,13 +151,17 @@ same container port can't run at once.
 
 ## Adding a service
 
-1. Add an entry to `services.yml` with `container` + `local` host/port.
+1. Add an entry to `services.yml` with `container` + `local` host/port and a `compose`
+   block (published_port, memory, depends_on, volumes).
 2. If it needs a new resource kind (e.g. a new event log group), extend `resources.yml`
    or `library.yml`.
 3. Add `cmd/<service>/formation.yml` declaring its `resources`.
-4. Wire it into `playbook.yml` and `docker-compose.yml`.
+4. Wire its env-render task into `playbook.yml`.
 5. Add it to the `SERVICES` array in `run-services.sh` if it should participate in
    proxy mode.
+
+`docker-compose.yml` is regenerated automatically from `services.yml` + `resources.yml`
+on the next `./run-services.sh render`.
 
 ## Secrets
 
@@ -165,5 +171,5 @@ same container port can't run at once.
 ansible-vault edit secrets.yml
 ```
 
-The rendered `Makefile` and `.env` files contain plaintext secrets and are gitignored.
-`proxy.conf` is also gitignored.
+The rendered `Makefile`, `.env` files, and `docker-compose.yml` are generated artifacts
+and are gitignored. `proxy.conf` is also gitignored.

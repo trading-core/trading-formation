@@ -61,3 +61,11 @@
         mode: '0644'
       tags:
         - makefile
+
+    - name: Render docker-compose.yml
+      template:
+        src: templates/docker-compose.yml.j2
+        dest: docker-compose.yml
+        mode: '0644'
+      tags:
+        - compose

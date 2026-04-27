@@ -4,27 +4,82 @@ services:
     scheme: http
     container: { host: account-service, port: 9000 }
     local:     { host: localhost,        port: 9000 }
+    compose:
+      published_port: 9000
+      memory: { limit: 256m, reservation: 64m }
+      depends_on:
+        - { name: redis, condition: service_healthy }
+
   stock_screener:
     scheme: http
     container: { host: stock-screener, port: 8080 }
     local:     { host: localhost,       port: 8080 }
-  auth_service:
+    compose:
+      published_port: 8080
+      memory: { limit: 256m, reservation: 64m }
+
+  authentication_service:
     scheme: http
     container: { host: authentication-service, port: 9100 }
     local:     { host: localhost,                port: 9100 }
+    compose:
+      published_port: 9100
+      memory: { limit: 256m, reservation: 64m }
+      depends_on:
+        - { name: postgres, condition: service_healthy }
+
   bot_service:
     scheme: http
     container: { host: bot-service, port: 8080 }
     local:     { host: localhost,    port: 8081 }
+    compose:
+      published_port: 8081
+      memory: { limit: 256m, reservation: 64m }
+      depends_on:
+        - { name: account-service }
+
   reporting_service:
     scheme: http
     container: { host: reporting-service, port: 8082 }
     local:     { host: localhost,          port: 8082 }
+    compose:
+      published_port: 8082
+      memory: { limit: 512m, reservation: 128m }
+      depends_on:
+        - { name: redis, condition: service_healthy }
+        - { name: storage-service, condition: service_started }
+
   storage_service:
     scheme: http
     container: { host: storage-service, port: 8083 }
     local:     { host: localhost,        port: 8083 }
+    compose:
+      published_port: 8083
+      memory: { limit: 256m, reservation: 64m }
+      depends_on:
+        - { name: redis, condition: service_healthy }
+      volumes:
+        - "storage-data:/app/storage"
+
   journal_service:
     scheme: http
     container: { host: journal-service, port: 8084 }
     local:     { host: localhost,        port: 8084 }
+    compose:
+      published_port: 8084
+      memory: { limit: 256m, reservation: 64m }
+      depends_on:
+        - { name: redis, condition: service_healthy }
+
+frontend:
+  compose:
+    published_port: 3000
+    container_port: 3000
+    memory: { limit: 512m, reservation: 128m }
+    depends_on:
+      - { name: account-service }
+      - { name: stock-screener }
+      - { name: authentication-service }
+      - { name: bot-service }
+      - { name: reporting-service }
+      - { name: journal-service }

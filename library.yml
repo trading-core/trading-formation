@@ -39,8 +39,8 @@ public_clients:
     NEXT_PUBLIC_ACCOUNT_SERVICE_BASE_URL: "{{ services.account_service.scheme }}://{{ services.account_service.local.host }}:{{ services.account_service.local.port }}"
   stock_screener:
     NEXT_PUBLIC_STOCK_SCREENER_BASE_URL: "{{ services.stock_screener.scheme }}://{{ services.stock_screener.local.host }}:{{ services.stock_screener.local.port }}"
-  auth_service:
-    NEXT_PUBLIC_AUTH_SERVICE_BASE_URL: "{{ services.auth_service.scheme }}://{{ services.auth_service.local.host }}:{{ services.auth_service.local.port }}"
+  authentication_service:
+    NEXT_PUBLIC_AUTH_SERVICE_BASE_URL: "{{ services.authentication_service.scheme }}://{{ services.authentication_service.local.host }}:{{ services.authentication_service.local.port }}"
   bot_service:
     NEXT_PUBLIC_BOT_SERVICE_BASE_URL: "{{ services.bot_service.scheme }}://{{ services.bot_service.local.host }}:{{ services.bot_service.local.port }}"
   journal_service:

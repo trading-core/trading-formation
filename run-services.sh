@@ -83,8 +83,16 @@ read_proxied_services() {
     return 0
 }
 
+require_compose_file() {
+    if [[ ! -f docker-compose.yml ]]; then
+        echo "docker-compose.yml not found. Run './run-services.sh render' first." >&2
+        exit 1
+    fi
+}
+
 bring_up() {
     local build_flag="${1:-}"
+    require_compose_file
     read_proxied_services
 
     if [[ ${#proxied[@]} -eq 0 ]]; then

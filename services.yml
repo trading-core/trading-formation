@@ -1,52 +1,53 @@
 ---
+# All external access goes through Traefik on :80 at http://<domain>, with each
+# service mounted at its own path prefix. Add this to your hosts file:
+#   127.0.0.1 trading-core
+# (/etc/hosts on Linux/Mac, %SystemRoot%\System32\drivers\etc\hosts on Windows.)
+domain: trading-core
+
 services:
   # The YAML key (underscored) maps to a docker-compose service name and a
-  # trading-backend/cmd/<dir> by replacing _ with -. Both must match a real
-  # directory or `docker build` will fail.
+  # trading-backend/cmd/<dir> by replacing _ with -. The path_prefix must match
+  # the PathPrefix() declared in that service's httpapi/Handler.go.
   account_service:
     scheme: http
+    path_prefix: /accounts/v1
     container: { host: account-service, port: 9000 }
-    local:     { host: localhost,        port: 9000 }
     compose:
-      published_port: 9000
       memory: { limit: 256m, reservation: 64m }
       depends_on:
         - { name: redis, condition: service_healthy }
 
   stock_screener:
     scheme: http
+    path_prefix: /stock-screener/v1
     container: { host: stock-screener, port: 8080 }
-    local:     { host: localhost,       port: 8080 }
     compose:
-      published_port: 8080
       memory: { limit: 256m, reservation: 64m }
 
   authentication_service:
     scheme: http
+    path_prefix: /auth/v1
     container: { host: authentication-service, port: 9100 }
-    local:     { host: localhost,                port: 9100 }
     compose:
-      published_port: 9100
       memory: { limit: 256m, reservation: 64m }
       depends_on:
         - { name: postgres, condition: service_healthy }
 
   bot_service:
     scheme: http
+    path_prefix: /bots/v1
     container: { host: bot-service, port: 8080 }
-    local:     { host: localhost,    port: 8081 }
     compose:
-      published_port: 8081
       memory: { limit: 256m, reservation: 64m }
       depends_on:
         - { name: account-service }
 
   reporting_service:
     scheme: http
+    path_prefix: /reports/v1
     container: { host: reporting-service, port: 8082 }
-    local:     { host: localhost,          port: 8082 }
     compose:
-      published_port: 8082
       memory: { limit: 512m, reservation: 128m }
       depends_on:
         - { name: redis, condition: service_healthy }
@@ -54,10 +55,9 @@ services:
 
   storage_service:
     scheme: http
+    path_prefix: /storage/v1
     container: { host: storage-service, port: 8083 }
-    local:     { host: localhost,        port: 8083 }
     compose:
-      published_port: 8083
       memory: { limit: 256m, reservation: 64m }
       depends_on:
         - { name: redis, condition: service_healthy }
@@ -66,17 +66,16 @@ services:
 
   journal_service:
     scheme: http
+    path_prefix: /journal/v1
     container: { host: journal-service, port: 8084 }
-    local:     { host: localhost,        port: 8084 }
     compose:
-      published_port: 8084
       memory: { limit: 256m, reservation: 64m }
       depends_on:
         - { name: redis, condition: service_healthy }
 
 frontend:
+  # Catch-all: everything not matched by a service path_prefix lands on the frontend.
   compose:
-    published_port: 3000
     container_port: 3000
     memory: { limit: 512m, reservation: 128m }
     depends_on:

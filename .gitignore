@@ -13,3 +13,5 @@ frontend/.env
 secrets.yml
 proxy.conf
 docker-compose.yml
+traefik-dynamic/
+.proxy-port-*

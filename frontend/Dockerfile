@@ -4,6 +4,9 @@ WORKDIR /app
 COPY trading-frontend/package.json trading-frontend/package-lock.json* ./
 RUN npm install
 COPY trading-frontend .
+# Next.js inlines NEXT_PUBLIC_* at build time — copy the rendered env into
+# the builder so `next build` sees it. (env_file in compose only applies at runtime.)
+COPY trading-formation/frontend/.env .env
 RUN npm run build
 
 FROM node:20-alpine

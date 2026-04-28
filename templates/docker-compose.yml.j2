@@ -2,6 +2,22 @@
 # Source: services.yml, resources.yml, templates/docker-compose.yml.j2
 
 services:
+  # File-only provider: routes are generated from services.yml at render time
+  # into traefik-dynamic/static.yml. No Docker API access needed.
+  traefik:
+    image: traefik:v3.1
+    command:
+      - "--providers.file.directory=/etc/traefik/dynamic"
+      - "--providers.file.watch=true"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "80:80"
+    volumes:
+      - ./traefik-dynamic:/etc/traefik/dynamic:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+
   redis:
     image: {{ redis.compose.image }}
     ports:
@@ -52,8 +68,8 @@ services:
       dockerfile: ./trading-formation/frontend/Dockerfile
     env_file:
       - ./frontend/.env
-    ports:
-      - '{{ frontend.compose.published_port }}:{{ frontend.compose.container_port }}'
+    expose:
+      - "{{ frontend.compose.container_port }}"
     depends_on:
 {% for dep in frontend.compose.depends_on %}
       {{ dep.name }}:
@@ -72,11 +88,11 @@ services:
       dockerfile: ./trading-formation/backend/Dockerfile
       args:
         SERVICE: {{ name }}
-        PORT: {{ cfg.compose.published_port }}
+        PORT: {{ cfg.container.port }}
     env_file:
       - ./backend/{{ name }}/.env
-    ports:
-      - '{{ cfg.compose.published_port }}:{{ cfg.container.port }}'
+    expose:
+      - "{{ cfg.container.port }}"
 {% if cfg.compose.depends_on is defined %}
     depends_on:
 {% for dep in cfg.compose.depends_on %}

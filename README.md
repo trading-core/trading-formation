@@ -96,31 +96,44 @@ rather install by hand:
 
    Both `start` and `up` honor `proxy.conf` if it exists — see [Proxy mode](#proxy-mode-host-side-service-for-debugging).
 
-4. Access:
-   - Frontend: http://localhost:3000
-   - account-service: http://localhost:9000
-   - stock-screener: http://localhost:8080
-   - bot-service: http://localhost:8081
-   - reporting-service: http://localhost:8082
-   - storage-service: http://localhost:8083
-   - journal-service: http://localhost:8084
-   - authentication-service: http://localhost:9100
-   - Redis: localhost:6379, Postgres: localhost:5432
+4. Add the dev hostname to your hosts file (one-time, requires admin):
+
+   ```
+   127.0.0.1 trading-core
+   ```
+
+   Hosts file: `/etc/hosts` on Linux/Mac, `%SystemRoot%\System32\drivers\etc\hosts` on Windows.
+
+5. Access (everything on http://trading-core, port 80):
+   - Frontend: http://trading-core (catch-all)
+   - account-service: http://trading-core/accounts/v1
+   - stock-screener: http://trading-core/stock-screener/v1
+   - bot-service: http://trading-core/bots/v1
+   - reporting-service: http://trading-core/reports/v1
+   - storage-service: http://trading-core/storage/v1
+   - journal-service: http://trading-core/journal/v1
+   - authentication-service: http://trading-core/auth/v1
+   - Redis: localhost:6379, Postgres: localhost:5432 (still published for direct admin access)
 
 ## Services
 
-| Service | Container | Published |
+Routing is path-based: Traefik listens on `:80` of `trading-core` and dispatches
+by URL path prefix. Each service's prefix matches the `PathPrefix()` declared in
+its `httpapi/Handler.go`, so the frontend's catch-all gets everything that isn't
+claimed by a backend. Container ports are bind-only — never published to the host.
+
+| Service | URL | Container port |
 |---|---|---|
-| frontend (Next.js) | 3000 | 3000 |
-| account-service | 9000 | 9000 |
-| stock-screener | 8080 | 8080 |
-| authentication-service | 9100 | 9100 |
-| bot-service | 8080 | 8081 |
-| reporting-service | 8082 | 8082 |
-| storage-service | 8083 | 8083 |
-| journal-service | 8084 | 8084 |
-| redis | 6379 | 6379 |
-| postgres | 5432 | 5432 |
+| frontend (Next.js) | http://trading-core/ (catch-all) | 3000 |
+| account-service | http://trading-core/accounts/v1 | 9000 |
+| stock-screener | http://trading-core/stock-screener/v1 | 8080 |
+| authentication-service | http://trading-core/auth/v1 | 9100 |
+| bot-service | http://trading-core/bots/v1 | 8080 |
+| reporting-service | http://trading-core/reports/v1 | 8082 |
+| storage-service | http://trading-core/storage/v1 | 8083 |
+| journal-service | http://trading-core/journal/v1 | 8084 |
+| redis | localhost:6379 | 6379 |
+| postgres | localhost:5432 | 5432 |
 
 ## Proxy mode (host-side service for debugging)
 
@@ -129,10 +142,12 @@ in docker:
 
 ```bash
 ./run-services.sh proxy        # seeds proxy.conf and opens it in $EDITOR
-./run-services.sh start        # (or `up`) — starts compose, replaces flagged services
-                               # with socat proxies, prints the make commands to run
-./run-services.sh status       # which proxies are running
-./run-services.sh kill         # tears down both compose and proxies
+./run-services.sh start        # (or `up`) — starts compose minus flagged services,
+                               # prints the make commands to run
+./run-services.sh watch        # in another terminal: keeps Traefik routes in sync
+                               # with each host process's ephemeral port
+./run-services.sh status       # which proxied services have an active port file
+./run-services.sh kill         # tears down compose and clears proxy routes
 ```
 
 `proxy.conf` is a sourced shell file:
@@ -149,21 +164,25 @@ JOURNAL_SERVICE=0
 
 When `up` runs:
 - The flagged service is excluded from `docker compose up`.
-- A socat container with `--network-alias <service>` is started so dockerized siblings
-  reach the host process via `<service>:<container_port> -> host.docker.internal:<container_port>`.
-- The script prints the `make` command for each flagged service. Run each in its own
-  terminal (kept separate so logs and Ctrl-C stay sane during debugging):
+- The script prints the `make` command for each flagged service. Run each in its
+  own terminal — the Makefile target picks a free TCP port, writes it to
+  `trading-formation/.proxy-port-<svc>`, and inlines the local-mode env so the
+  host process talks back to dockerized siblings via Traefik:
 
   ```bash
   make -C ../trading-backend run-bot-service
   ```
 
-  The Makefile target inlines the local-mode env (`localhost`-routed), so the host
-  process talks back to dockerized siblings via published ports.
+- `./run-services.sh watch` polls those `.proxy-port-<svc>` files and writes a
+  Traefik dynamic config under `traefik-dynamic/<svc>.yml` routing
+  `<sub>.trading.local` → `host.docker.internal:<ephemeral_port>`. Traefik
+  hot-reloads the file, so dockerized siblings reach the host process by
+  hostname, no socat container needed.
 
-**Caveat**: the host process must bind to the same port docker-compose lists as the
-container port (e.g. bot-service on 8080, not 8081). Two host processes claiming the
-same container port can't run at once.
+No port collisions: every host process gets a unique ephemeral port, and only
+the hostname matters for routing. Two host processes for the same service still
+can't both run (only one owns `.proxy-port-<svc>`), which is the desired
+behavior.
 
 ## Adding a service
 

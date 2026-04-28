@@ -69,3 +69,19 @@
         mode: '0644'
       tags:
         - compose
+
+    - name: Ensure traefik-dynamic dir exists
+      file:
+        path: traefik-dynamic
+        state: directory
+        mode: '0755'
+      tags:
+        - traefik
+
+    - name: Render Traefik static routes
+      template:
+        src: templates/traefik-static.yml.j2
+        dest: traefik-dynamic/static.yml
+        mode: '0644'
+      tags:
+        - traefik

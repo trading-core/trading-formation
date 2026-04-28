@@ -18,30 +18,34 @@ apis:
     FETCH_SENTIMENT_STRATEGY_CNN_MARKET_ENDPOINT: https://production.dataviz.cnn.io/index/fearandgreed/graphdata
   trading_api:
     TRADING_API_SCHEME: http
-    TRADING_API_HOST: localhost:9000
+    TRADING_API_HOST: "{{ domain }}"
   frontend:
-    FRONTEND_BASE_URL: http://localhost:3000
+    FRONTEND_BASE_URL: "http://{{ domain }}"
 
+# In container mode siblings reach each other via the docker network
+# (<container.host>:<container.port>) — direct, no proxy hop. In local/host mode
+# they go through Traefik on :80 at http://<domain><path_prefix>.
 clients:
   account_service:
     ACCOUNT_SERVICE_CLIENT_IMPLEMENTATION: HTTP
     ACCOUNT_SERVICE_SCHEME: "{{ services.account_service.scheme }}"
-    ACCOUNT_SERVICE_HOST: "{{ services.account_service[mode].host }}"
-    ACCOUNT_SERVICE_PORT: "{{ services.account_service[mode].port }}"
+    ACCOUNT_SERVICE_HOST: "{{ services.account_service.container.host if mode == 'container' else domain }}"
+    ACCOUNT_SERVICE_PORT: "{{ services.account_service.container.port if mode == 'container' else 80 }}"
   storage_service:
     STORAGE_SERVICE_CLIENT_IMPLEMENTATION: HTTP
     STORAGE_SERVICE_SCHEME: "{{ services.storage_service.scheme }}"
-    STORAGE_SERVICE_HOST: "{{ services.storage_service[mode].host }}"
-    STORAGE_SERVICE_PORT: "{{ services.storage_service[mode].port }}"
+    STORAGE_SERVICE_HOST: "{{ services.storage_service.container.host if mode == 'container' else domain }}"
+    STORAGE_SERVICE_PORT: "{{ services.storage_service.container.port if mode == 'container' else 80 }}"
 
+# Browser-side URLs always go through Traefik on the single host.
 public_clients:
   account_service:
-    NEXT_PUBLIC_ACCOUNT_SERVICE_BASE_URL: "{{ services.account_service.scheme }}://{{ services.account_service.local.host }}:{{ services.account_service.local.port }}"
+    NEXT_PUBLIC_ACCOUNT_SERVICE_BASE_URL: "{{ services.account_service.scheme }}://{{ domain }}"
   stock_screener:
-    NEXT_PUBLIC_STOCK_SCREENER_BASE_URL: "{{ services.stock_screener.scheme }}://{{ services.stock_screener.local.host }}:{{ services.stock_screener.local.port }}"
+    NEXT_PUBLIC_STOCK_SCREENER_BASE_URL: "{{ services.stock_screener.scheme }}://{{ domain }}"
   authentication_service:
-    NEXT_PUBLIC_AUTH_SERVICE_BASE_URL: "{{ services.authentication_service.scheme }}://{{ services.authentication_service.local.host }}:{{ services.authentication_service.local.port }}"
+    NEXT_PUBLIC_AUTH_SERVICE_BASE_URL: "{{ services.authentication_service.scheme }}://{{ domain }}"
   bot_service:
-    NEXT_PUBLIC_BOT_SERVICE_BASE_URL: "{{ services.bot_service.scheme }}://{{ services.bot_service.local.host }}:{{ services.bot_service.local.port }}"
+    NEXT_PUBLIC_BOT_SERVICE_BASE_URL: "{{ services.bot_service.scheme }}://{{ domain }}"
   journal_service:
-    NEXT_PUBLIC_JOURNAL_SERVICE_BASE_URL: "{{ services.journal_service.scheme }}://{{ services.journal_service.local.host }}:{{ services.journal_service.local.port }}"
+    NEXT_PUBLIC_JOURNAL_SERVICE_BASE_URL: "{{ services.journal_service.scheme }}://{{ domain }}"

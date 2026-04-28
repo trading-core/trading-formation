@@ -37,7 +37,7 @@ services:
   bot_service:
     scheme: http
     path_prefix: /bots/v1
-    container: { host: bot-service, port: 8080 }
+    container: { host: bot-service, port: 8081 }
     compose:
       memory: { limit: 256m, reservation: 64m }
       depends_on:

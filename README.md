@@ -46,11 +46,27 @@ Each named resource maps to a dict of env-var key/value pairs.
 
 ## Prerequisites
 
+The fastest path is to run the installer in [environment-setup](../environment-setup/):
+
+```powershell
+# Windows (elevated PowerShell)
+..\environment-setup\setup.ps1
+```
+
+```bash
+# Linux / macOS
+../environment-setup/setup.sh
+```
+
+It installs everything below and the per-service deps in one shot. If you'd
+rather install by hand:
+
 - **Docker** (Desktop on Windows/Mac, Engine on Linux)
 - **Ansible** — for rendering env files and the Makefile
 - **GNU Make** — only needed if you want proxy mode (`make run-<svc>`)
   - Linux/Mac: usually preinstalled
   - Windows: `winget install ezwinports.make` (or `choco install make`), then restart the shell so `make` is on `PATH`
+- **Go 1.25+**, **Node.js LTS**, **Python 3.10+** — required to build the backend, frontend, and run the integration tests respectively
 
 ## Setup
 

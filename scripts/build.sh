@@ -23,6 +23,8 @@ notify() {
 }
 
 main() {
+    local service="${1:-}"
+
     # --- Sync secrets ---
     echo "Syncing secrets to $SERVER..."
     local secrets=(
@@ -51,14 +53,30 @@ main() {
     echo "Pushing to $SERVER..."
     git -C "$FORMATION_DIR" push server main
 
+    if [[ -n "$service" ]]; then
+        # Single service build — bypass the hook, run directly on server.
+        echo "Building $service on $SERVER..."
+        ssh "$SERVER" "
+            echo 'building \$(date -Iseconds)' > $STATUS_FILE
+            cd /opt/trading-core/trading-formation
+            if docker compose build --progress=plain $service >> $LOG_FILE 2>&1; then
+                echo '=== BUILD READY ===' >> $LOG_FILE
+                echo 'ready \$(date -Iseconds)' > $STATUS_FILE
+            else
+                echo '=== BUILD FAILED ===' >> $LOG_FILE
+                echo 'failed \$(date -Iseconds)' > $STATUS_FILE
+            fi
+        " &
+    fi
+
     # --- Check if already done ---
     local current
     current=$(ssh "$SERVER" "cat $STATUS_FILE 2>/dev/null || echo 'none'")
-    if [[ "$current" == ready* ]]; then
+    if [[ -z "$service" && "$current" == ready* ]]; then
         notify "Trading Core" "Build ready — run ./scripts/deploy.sh"
         echo "Build ready. Run: ./scripts/deploy.sh"
         return
-    elif [[ "$current" == failed* ]]; then
+    elif [[ -z "$service" && "$current" == failed* ]]; then
         notify "Trading Core" "Build FAILED"
         echo "Build failed."
         return

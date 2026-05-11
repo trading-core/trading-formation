@@ -12,8 +12,11 @@ These scripts manage building and deploying the trading stack to `kduong-server`
 ### To build and deploy
 
 ```bash
-# 1. Sync secrets + push + stream build log (notifies via Windows desktop when done)
+# 1. Sync secrets + push + build all services (notifies via Windows desktop when done)
 ./scripts/build.sh
+
+# Or rebuild a single service
+./scripts/build.sh storage-service
 
 # 2. Deploy once notified
 ./scripts/deploy.sh

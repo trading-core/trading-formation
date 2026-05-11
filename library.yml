@@ -20,7 +20,7 @@ apis:
     TRADING_API_SCHEME: http
     TRADING_API_HOST: "{{ domain }}"
   frontend:
-    FRONTEND_BASE_URL: "http://{{ domain }}"
+    FRONTEND_BASE_URL: "http://{{ api_domain }}"
 
 # In container mode siblings reach each other via the docker network
 # (<container.host>:<container.port>) — direct, no proxy hop. In local/host mode
@@ -40,12 +40,14 @@ clients:
 # Browser-side URLs always go through Traefik on the single host.
 public_clients:
   account_service:
-    NEXT_PUBLIC_ACCOUNT_SERVICE_BASE_URL: "{{ services.account_service.scheme }}://{{ domain }}"
+    NEXT_PUBLIC_ACCOUNT_SERVICE_BASE_URL: "{{ services.account_service.scheme }}://{{ api_domain }}"
   stock_screener:
-    NEXT_PUBLIC_STOCK_SCREENER_BASE_URL: "{{ services.stock_screener.scheme }}://{{ domain }}"
+    NEXT_PUBLIC_STOCK_SCREENER_BASE_URL: "{{ services.stock_screener.scheme }}://{{ api_domain }}"
   authentication_service:
-    NEXT_PUBLIC_AUTH_SERVICE_BASE_URL: "{{ services.authentication_service.scheme }}://{{ domain }}"
+    NEXT_PUBLIC_AUTH_SERVICE_BASE_URL: "{{ services.authentication_service.scheme }}://{{ api_domain }}"
   bot_service:
-    NEXT_PUBLIC_BOT_SERVICE_BASE_URL: "{{ services.bot_service.scheme }}://{{ domain }}"
+    NEXT_PUBLIC_BOT_SERVICE_BASE_URL: "{{ services.bot_service.scheme }}://{{ api_domain }}"
   journal_service:
-    NEXT_PUBLIC_JOURNAL_SERVICE_BASE_URL: "{{ services.journal_service.scheme }}://{{ domain }}"
+    NEXT_PUBLIC_JOURNAL_SERVICE_BASE_URL: "{{ services.journal_service.scheme }}://{{ api_domain }}"
+  reporting_service:
+    NEXT_PUBLIC_REPORTING_SERVICE_BASE_URL: "{{ services.reporting_service.scheme }}://{{ api_domain }}"

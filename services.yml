@@ -1,9 +1,10 @@
 ---
-# All external access goes through Traefik on :80 at http://<domain>, with each
-# service mounted at its own path prefix. Add this to your hosts file:
-#   127.0.0.1 trading-core
-# (/etc/hosts on Linux/Mac, %SystemRoot%\System32\drivers\etc\hosts on Windows.)
-domain: trading-core
+# All external access goes through Traefik on :80. Add both to your hosts file
+# pointing to the server IP (/etc/hosts on Linux/Mac, %SystemRoot%\System32\drivers\etc\hosts on Windows):
+#   <server-ip> trading-core.local
+#   <server-ip> api.trading-core.local
+domain: trading-core.local
+api_domain: api.trading-core.local
 
 services:
   # The YAML key (underscored) maps to a docker-compose service name and a

@@ -10,7 +10,7 @@ http:
 {% for key, cfg in services.items() %}
 {% set name = key | replace('_', '-') %}
     {{ name }}:
-      rule: "Host(`{{ domain }}`) && PathPrefix(`{{ cfg.path_prefix }}`)"
+      rule: "Host(`{{ api_domain }}`) && PathPrefix(`{{ cfg.path_prefix }}`)"
       service: {{ name }}
       entryPoints: [web]
 {% endfor %}

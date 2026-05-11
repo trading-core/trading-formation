@@ -10,6 +10,7 @@ api_domain: api.trading-core.local
 local_domain: trading-core.localhost
 local_api_domain: api.trading-core.localhost
 
+
 services:
   # The YAML key (underscored) maps to a docker-compose service name and a
   # trading-backend/cmd/<dir> by replacing _ with -. The path_prefix must match

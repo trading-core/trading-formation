@@ -12,13 +12,13 @@
   vars:
     mode: container
 
-- name: "[{{ service_name }}] Ensure container .env directory exists"
+- name: "[{{ service_name }}] Ensure .env directory exists"
   file:
     path: "{{ env_dest | dirname }}"
     state: directory
     mode: '0755'
 
-- name: "[{{ service_name }}] Render container .env"
+- name: "[{{ service_name }}] Render .env"
   template:
     src: "{{ playbook_dir }}/templates/service.env.j2"
     dest: "{{ env_dest }}"

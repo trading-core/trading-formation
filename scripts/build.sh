@@ -25,6 +25,10 @@ notify() {
 main() {
     local service="${1:-}"
 
+    # --- Render .env files for server deploy ---
+    echo "Rendering .env files for server deploy..."
+    "$FORMATION_DIR/run-services.sh" render --local
+
     # --- Sync secrets ---
     echo "Syncing secrets to $SERVER..."
     local secrets=(

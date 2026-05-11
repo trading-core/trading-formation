@@ -29,6 +29,17 @@ DOMAIN="$(awk '/^domain:/ {print $2; exit}' services.yml)"
 API_DOMAIN="$(awk '/^api_domain:/ {print $2; exit}' services.yml)"
 LOCAL_DOMAIN="$(awk '/^local_domain:/ {print $2; exit}' services.yml)"
 LOCAL_API_DOMAIN="$(awk '/^local_api_domain:/ {print $2; exit}' services.yml)"
+LOCAL_MODE="$(awk '/^local_mode:/ {print $2; exit}' services.yml)"
+LOCAL_MODE="${LOCAL_MODE:-localhost}"
+
+# Effective domain used for Makefile targets and proxy routes.
+# local_mode=localhost uses the .localhost TLD (resolves natively).
+# local_mode=local uses the .local TLD (requires /etc/hosts).
+if [[ "$LOCAL_MODE" == "local" ]]; then
+    EFFECTIVE_API_DOMAIN="$API_DOMAIN"
+else
+    EFFECTIVE_API_DOMAIN="$LOCAL_API_DOMAIN"
+fi
 
 path_prefix_for() {
     for entry in "${SERVICES[@]}"; do
@@ -46,7 +57,7 @@ write_dynamic_route() {
 http:
   routers:
     $svc:
-      rule: "Host(\`$LOCAL_API_DOMAIN\`) && PathPrefix(\`$prefix\`)"
+      rule: "Host(\`$EFFECTIVE_API_DOMAIN\`) && PathPrefix(\`$prefix\`)"
       service: $svc
       entryPoints: [web]
   services:
@@ -188,8 +199,12 @@ case "${1:-}" in
         echo "Docker purge completed"
         ;;
     render)
+        local_mode_arg="-e local_mode=localhost"
+        if [[ "${2:-}" == "--local" ]]; then
+            local_mode_arg="-e local_mode=local"
+        fi
         echo "Generating .env files and Makefile from secrets..."
-        ansible-playbook playbook.yml --ask-vault-pass
+        ansible-playbook playbook.yml --ask-vault-pass $local_mode_arg
         ;;
     proxy)
         if [[ ! -f "$PROXY_CONF" ]]; then
@@ -232,7 +247,9 @@ Usage: $0 <command>
   watch    Keep Traefik routes in sync with host process ephemeral ports
   kill     Stop containers and clear Traefik proxy routes
   delete   Purge containers, images, volumes
-  render   Generate .env files and Makefile via ansible-playbook
+  render [--local]   Generate .env files and Makefile via ansible-playbook
+                     Default uses .localhost TLD (local dev, no hosts file needed).
+                     --local uses .local TLD (requires /etc/hosts); used by build.sh.
   proxy    Seed/edit proxy.conf — flag a service as 1 to run it on the host
   status   Show which proxied services have an active host port file
 EOF

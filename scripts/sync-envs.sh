@@ -16,6 +16,7 @@ envs=(
     "backend/stock-screener/.env"
     "backend/storage-service/.env"
     "frontend/.env"
+    "traefik-dynamic/static.yml"
 )
 
 for f in "${envs[@]}"; do

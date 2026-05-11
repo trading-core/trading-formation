@@ -13,9 +13,18 @@ http:
       rule: "Host(`{{ api_domain }}`) && PathPrefix(`{{ cfg.path_prefix }}`)"
       service: {{ name }}
       entryPoints: [web]
+    {{ name }}-local:
+      rule: "Host(`{{ local_api_domain }}`) && PathPrefix(`{{ cfg.path_prefix }}`)"
+      service: {{ name }}
+      entryPoints: [web]
 {% endfor %}
     frontend:
       rule: "Host(`{{ domain }}`)"
+      service: frontend
+      entryPoints: [web]
+      priority: 1
+    frontend-local:
+      rule: "Host(`{{ local_domain }}`)"
       service: frontend
       entryPoints: [web]
       priority: 1

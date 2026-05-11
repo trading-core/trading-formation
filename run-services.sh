@@ -27,6 +27,8 @@ SERVICES=(
 # Reads top-level domains from services.yml without needing a YAML parser.
 DOMAIN="$(awk '/^domain:/ {print $2; exit}' services.yml)"
 API_DOMAIN="$(awk '/^api_domain:/ {print $2; exit}' services.yml)"
+LOCAL_DOMAIN="$(awk '/^local_domain:/ {print $2; exit}' services.yml)"
+LOCAL_API_DOMAIN="$(awk '/^local_api_domain:/ {print $2; exit}' services.yml)"
 
 path_prefix_for() {
     for entry in "${SERVICES[@]}"; do
@@ -44,7 +46,7 @@ write_dynamic_route() {
 http:
   routers:
     $svc:
-      rule: "Host(\`$API_DOMAIN\`) && PathPrefix(\`$prefix\`)"
+      rule: "Host(\`$LOCAL_API_DOMAIN\`) && PathPrefix(\`$prefix\`)"
       service: $svc
       entryPoints: [web]
   services:

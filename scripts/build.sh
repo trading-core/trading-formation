@@ -72,10 +72,10 @@ main() {
     local result="failed"
     cleanup() {
         kill "$LOGTAIL_PID" 2>/dev/null
-        wait "$LOGTAIL_PID" 2>/dev/null
-        trap - INT
+        wait "$LOGTAIL_PID" 2>/dev/null || true
+        trap - INT TERM
     }
-    trap 'cleanup; echo ""; echo "Stopped."' INT
+    trap 'cleanup; echo ""; echo "Stopped."; return 0' INT TERM
 
     while IFS= read -r line <&"${LOGTAIL[0]}"; do
         echo "$line"

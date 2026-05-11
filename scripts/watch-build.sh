@@ -18,6 +18,11 @@ notify() {
     " &
 }
 
+if [[ "${1:-}" == "--push" ]]; then
+    echo "Pushing to $SERVER..."
+    git -C "$(dirname "${BASH_SOURCE[0]}")/.." push server main
+fi
+
 echo "Watching build on $SERVER... (Ctrl-C to stop)"
 
 last=""

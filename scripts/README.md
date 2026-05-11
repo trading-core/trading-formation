@@ -20,14 +20,17 @@ Pushes `docker-compose.yml` and all `.env` files to the server. These are not co
 ### To build and deploy
 
 ```bash
-# 1. Push changes — triggers a background Docker build on the server
-git push server main
+# 1. Push and watch in one command — notifies via Windows desktop when done
+./scripts/watch-build.sh --push
 
-# 2. Watch for completion (fires a Windows desktop notification when done)
-./scripts/watch-build.sh
-
-# 3. Deploy once notified
+# 2. Deploy once notified
 ./scripts/deploy.sh
+```
+
+Or if you want to watch a build already in progress:
+
+```bash
+./scripts/watch-build.sh
 ```
 
 ### If the build fails

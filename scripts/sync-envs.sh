@@ -3,14 +3,18 @@
 set -euo pipefail
 
 SERVER="kduong-server"
-LOCAL="$(cd "$(dirname "$0")/.." && pwd)"
+LOCAL="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 REMOTE="/opt/trading-core/trading-formation"
 
 envs=(
     "docker-compose.yml"
     "backend/account-service/.env"
     "backend/authentication-service/.env"
+    "backend/bot-service/.env"
+    "backend/journal-service/.env"
+    "backend/reporting-service/.env"
     "backend/stock-screener/.env"
+    "backend/storage-service/.env"
     "frontend/.env"
 )
 

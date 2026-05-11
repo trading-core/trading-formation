@@ -186,7 +186,7 @@ case "${1:-}" in
         ;;
     render)
         echo "Generating .env files and Makefile from secrets..."
-        sudo ansible-playbook playbook.yml --ask-vault-pass
+        ansible-playbook playbook.yml --ask-vault-pass
         ;;
     proxy)
         if [[ ! -f "$PROXY_CONF" ]]; then

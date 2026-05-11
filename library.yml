@@ -19,8 +19,6 @@ apis:
   trading_api:
     TRADING_API_SCHEME: http
     TRADING_API_HOST: "{{ domain }}"
-  frontend:
-    FRONTEND_BASE_URL: "http://{{ api_domain }}"
 
 # In container mode siblings reach each other via the docker network
 # (<container.host>:<container.port>) — direct, no proxy hop. In local/host mode

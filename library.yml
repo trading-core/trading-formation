@@ -18,7 +18,7 @@ apis:
     FETCH_SENTIMENT_STRATEGY_CNN_MARKET_ENDPOINT: https://production.dataviz.cnn.io/index/fearandgreed/graphdata
   trading_api:
     TRADING_API_SCHEME: http
-    TRADING_API_HOST: "{{ domain }}"
+    TRADING_API_HOST: "{{ api_domain }}"
   frontend:
     FRONTEND_BASE_URL: "http://{{ domain }}"
 

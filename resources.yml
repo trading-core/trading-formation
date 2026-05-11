@@ -35,7 +35,6 @@ postgres:
 named_volumes:
   - postgres-data
   - redis-data
-  - storage-data
 
 logs:
   account_event_log:

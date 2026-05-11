@@ -62,7 +62,7 @@ services:
       depends_on:
         - { name: redis, condition: service_healthy }
       volumes:
-        - "storage-data:/app/storage"
+        - "/opt/trading-storage:/app/storage"
 
   journal_service:
     scheme: http
